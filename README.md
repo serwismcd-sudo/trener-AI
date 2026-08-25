@@ -193,7 +193,36 @@ i zieloną linię celu.
 
 ---
 
-## Dostęp z telefonu
+## Wersja w chmurze (telefon i komputer)
+
+Aplikacja działa też pod adresem na Streamlit Cloud — **niezależnie od tego, czy
+komputer jest włączony**. Dane leżą w Postgresie (Supabase), więc komputer, telefon
+i chmura widzą dokładnie to samo.
+
+**Logowanie jest dwustopniowe:** najpierw konto GitHub (aplikacja jest prywatna),
+potem hasło z sekretu `HASLO_APLIKACJI`.
+
+Sekrety w panelu Streamlit Cloud (Settings → Secrets), format TOML:
+
+```toml
+DATABASE_URL = "postgresql://..."
+ANTHROPIC_API_KEY = "sk-ant-..."
+GARMIN_EMAIL = "..."
+GARMIN_PASSWORD = "..."
+HASLO_APLIKACJI = "..."
+```
+
+Kod aktualizuje się sam: `git push` na gałąź `main` uruchamia przebudowę aplikacji.
+
+**Baza wybiera się automatycznie.** Jest `DATABASE_URL` → Postgres w chmurze.
+Nie ma → lokalny plik `trener.db`. Ten sam kod działa w obu miejscach.
+
+**Czego pilnować:** darmowy Supabase usypia bazę po tygodniu bezczynności (budzi się
+jednym kliknięciem w panelu). Chmura nie ma gdzie zapisać tokenu Garmina, więc przy
+każdym przebudzeniu loguje się hasłem — gdyby zaczęły pojawiać się błędy `429`,
+token trzeba będzie przenieść do sekretów.
+
+## Dostęp z telefonu (przez sieć domową, bez chmury)
 
 Aplikacja działa na komputerze, ale możesz ją otworzyć **w przeglądarce telefonu**,
 gdy oba urządzenia są w tej samej sieci domowej. W panelu bocznym jest sekcja
