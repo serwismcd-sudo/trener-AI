@@ -32,11 +32,31 @@ def _sekret(nazwa):
         return None
 
 
+def _w_internecie():
+    """Czy aplikacja jest wystawiona poza dom.
+
+    Decyduje adres, pod którym przyszło żądanie: localhost i adresy sieci domowej
+    to komputer i telefon w Wi-Fi, wszystko inne traktujemy jako internet.
+    Sam katalog /mount/src (tak wygląda Streamlit Cloud) zostaje jako zapasowy
+    sygnał - gdyby oni zmienili układ plików, decyduje adres, nie ścieżka.
+    """
+    if Path("/mount/src").exists():
+        return True
+    try:
+        host = (st.context.headers.get("Host") or "").split(":")[0].lower()
+    except Exception:
+        return False                                  # brak informacji = nie blokujemy lokalnie
+    if not host:
+        return False
+    domowe = ("localhost", "127.0.0.1", "0.0.0.0", "::1")
+    return not (host in domowe or host.startswith(("192.168.", "10.", "172.16.", "172.17.")))
+
+
 def brama():
     """Ekran logowania. W chmurze OBOWIĄZKOWY - aplikacja stoi pod publicznym
     adresem, a trzyma wagę, dane zdrowotne i klucz API, za który płacisz."""
     haslo = _sekret("HASLO_APLIKACJI")
-    w_chmurze = Path("/mount/src").exists()          # tak wygląda Streamlit Cloud
+    w_chmurze = _w_internecie()
 
     if not haslo:
         if w_chmurze:
