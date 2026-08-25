@@ -1,0 +1,11 @@
+# Sekrety - nigdy do repozytorium
+.env
+
+# Dane lokalne i wygenerowane
+trener.db
+dane/
+
+# Srodowisko i cache
+.venv/
+__pycache__/
+*.pyc

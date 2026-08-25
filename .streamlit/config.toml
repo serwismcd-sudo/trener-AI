@@ -1,0 +1,10 @@
+# Konfiguracja lokalna aplikacji Trener AI.
+
+[server]
+# Bez tego Streamlit przy pierwszym uruchomieniu pyta w konsoli o e-mail
+# i czeka na Enter - okno .bat zawieszaloby sie na tym pytaniu.
+showEmailPrompt = false
+
+[browser]
+# Zadnej telemetrii - aplikacja ma dzialac wylacznie lokalnie.
+gatherUsageStats = false
